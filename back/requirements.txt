@@ -12,8 +12,9 @@ datasets
 evaluate
 rouge_score
 
-langchain_google_genai
+langchain
 langchain_core
+langchain_google_genai
 langchain_huggingface
 
 langsmith
