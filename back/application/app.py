@@ -26,8 +26,13 @@ app = Flask(__name__)
 CORS(app)
 
 ## Téléchargement de mon modèle fine-tuned et son tokeniser
-t5_model = T5ForConditionalGeneration.from_pretrained(folder_path)
-t5_tokenizer = T5Tokenizer.from_pretrained(folder_path)
+api=API()
+model = api.get_model("emeline-caruana", "t5-finetuned")
+md= model.download("1.2.0")
+
+## Initialisation du modèle
+t5_model = T5ForConditionalGeneration.from_pretrained("/tmp/tmpeod40g9i/t5-finetuned")
+t5_tokenizer = T5Tokenizer.from_pretrained("/tmp/tmpeod40g9i/t5-finetuned")
 
 ## Initialisation Google Gen AI
 google_llm = GoogleGenerativeAI(model="gemini-pro", google_api_key="AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE")
@@ -49,7 +54,7 @@ vector_store = PineconeVectorStore(index=index, embedding=embeddings, text_key="
 def retrieve_context_from_pinecone(topic):
     ## Encoding du sujet en utilisant le même modèle d'embedding que celui utilisé pour Pinecone
     embedding = generate_embedding_for_topic(topic)
-    
+
     ## Interrogation de Pinecone pour des textes similaires
     query_result = index.query(vector=embedding, top_k=3, namespace='poem-gen-rag')
     ## Combinaison des résultats en une seule chaîne de contexte
@@ -57,7 +62,7 @@ def retrieve_context_from_pinecone(topic):
     return context if context else "No additional context available."
 
 
-def generate_embedding_for_topic(topic):    
+def generate_embedding_for_topic(topic):
     embedd = embeddings.embed_query(topic)
     print(len(embedd))
     print(embedd)
@@ -76,28 +81,28 @@ def predict(request, topic):
                 'poem': item['poem'],
                 'from_memory': True
             }
-    
+
     prompt = f"Generate a short poem about this topic: {topic}"
     inputs = t5_tokenizer.encode(prompt, return_tensors="pt")
     t5_output = t5_model.generate(inputs, max_length=50, num_return_sequences=1)
     t5_poem = t5_tokenizer.decode(t5_output[0], skip_special_tokens=True)
-    
+
     context = retrieve_context_from_pinecone(topic)
-    
+
     final_prompt_template = (
         "Here is a poem generated about {topic}: {poem}. "
         "With the following additional context: {context}. "
         "Please refine and improve this poem."
     )
-    
+
     prompt_template = PromptTemplate(
         input_variables=["topic", "poem", "context"],
         template=final_prompt_template
     )
-    
+
     chain = prompt_template | google_llm | StrOutputParser()
     final_poem = chain.invoke({"topic": topic, "poem": t5_poem, "context": context})
-    
+
     memory_store.append({
         'topic': topic,
         'poem': final_poem
@@ -117,7 +122,7 @@ def predict(request, topic):
 def get_poem():
     data = request.json
     topic = data.get('text')
-    
+
     ## Récupération du poème dans la mémoire
     for item in memory_store:
         if item['topic'] == topic:
@@ -127,12 +132,12 @@ def get_poem():
                 'poem': item['poem'],
                 'from_memory': True
             })
-    
+
     return jsonify({
         'status': 'error',
         'message': 'Poem not found for the given topic.'
     })
-    
+
 
 
 @app.route('/', methods=['GET'])
