@@ -103,7 +103,12 @@ def predict():
     )
 
     chain = prompt_template | google_llm | StrOutputParser()
-    final_poem = chain.invoke({"topic": topic, "poem": t5_poem, "context": context})
+    try:
+        final_poem = chain.invoke({"topic": topic, "poem": t5_poem, "context": context})
+        if not final_poem:
+            final_poem = t5_poem
+    except Exception as e:
+        final_poem = t5_poem
 
     memory_store.append({
         'topic': topic,
