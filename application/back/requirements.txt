@@ -1,0 +1,15 @@
+flask
+flask-cors
+
+transformers
+
+langchain
+langchain-core
+langchain-pinecone
+langchain-community
+langchain-huggingface
+langchain-google-genai
+
+pinecone
+
+comet-ml
