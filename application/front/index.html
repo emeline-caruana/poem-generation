@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Form Page</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Poem Generation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h2>Poem generation by Emeline</h2> 
+        <h2>Poem Generation by Emeline</h2> 
         <p>Please give us a theme you would like your poem to be about:</p> 
         <form id="apiForm">
             <div class="form-group">
@@ -21,6 +21,6 @@
         </form>
         <div id="response" class="response"></div> 
     </div>
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

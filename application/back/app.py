@@ -1,5 +1,5 @@
 ## Imports pour Flask
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 ## Imports pour les transformers
@@ -22,7 +22,8 @@ from pinecone import Pinecone
 from langchain_pinecone import PineconeVectorStore
 
 ## Initialisation de Flask
-app = Flask(__name__)
+# app = Flask(__name__)
+app = Flask(__name__, static_folder='../front/', template_folder='../front/')
 CORS(app)
 
 ## Téléchargement de mon modèle fine-tuned et son tokeniser
@@ -31,8 +32,8 @@ CORS(app)
 # md= model.download("1.2.0")
 
 ## Initialisation du modèle
-t5_model = T5ForConditionalGeneration.from_pretrained("C:/Users/emeli/Documents/poem-generation/back/models/t5-finetuned-1.2.0/")
-t5_tokenizer = T5Tokenizer.from_pretrained("C:/Users/emeli/Documents/poem-generation/back/models/t5-finetuned-1.2.0/")
+t5_model = T5ForConditionalGeneration.from_pretrained("C:/Users/emeli/Documents/poem-generation/finetuning/models/t5-finetuned-1.2.0/")
+t5_tokenizer = T5Tokenizer.from_pretrained("C:/Users/emeli/Documents/poem-generation/finetuning/models/t5-finetuned-1.2.0/")
 
 ## Initialisation Google Gen AI
 google_llm = GoogleGenerativeAI(model="gemini-pro", google_api_key="AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE")
@@ -53,18 +54,19 @@ vector_store = PineconeVectorStore(index=index, embedding=embeddings, text_key="
 ## RAG
 def retrieve_context_from_pinecone(topic):
     ## Encoding du sujet en utilisant le même modèle d'embedding que celui utilisé pour Pinecone
-    embedding = generate_embedding_for_topic(topic)
-
     ## Interrogation de Pinecone pour des textes similaires
-    query_result = index.query(vector=embedding, top_k=3, namespace='poem-gen-rag')
+    query_result = vector_store.similarity_search(topic)
+
     ## Combinaison des résultats en une seule chaîne de contexte
-    context = ' '.join([match['metadata']['text'] for match in query_result['matches']])
-    return context if context else "No additional context available."
+    contexts = []
+    for doc in query_result:
+        dict_doc = dict(doc)
+        contexts.append(dict_doc['page_content'])
+
+    contexts = ' '.join([context for context in contexts])
+    return contexts if contexts else "No additional context available."
 
 
-def generate_embedding_for_topic(topic):
-    embedd = embeddings.embed_query(topic)
-    return embedd
 
 
 @app.route('/predict', methods=['POST'])
@@ -72,7 +74,7 @@ def generate_embedding_for_topic(topic):
 def predict():
     data = request.json
     topic = data.get('text')
-    
+
     for item in memory_store:
         if item['topic'] == topic:
             return {
@@ -141,8 +143,11 @@ def get_poem():
 
 
 @app.route('/', methods=['GET'])
+# def index():
+#     return "Hello, World!"
 def index():
-    return "Welcome to the Poem Generator by Emeline !"
+    return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
