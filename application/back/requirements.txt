@@ -2,6 +2,7 @@ flask
 flask-cors
 
 transformers
+sentencepiece
 
 langchain
 langchain-core
