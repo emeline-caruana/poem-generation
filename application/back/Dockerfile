@@ -12,13 +12,14 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip
 WORKDIR /app
 
 # Copy requirements.txt first to leverage Docker cache
-COPY ./back/requirements.txt .
+COPY ./requirements.txt .
+COPY ./models/* /home/t5-finetuned-1.2.0/
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the backend files into the container
-COPY ./back /app
+COPY * /app
 
 # Expose the port the application will use
 EXPOSE 5000

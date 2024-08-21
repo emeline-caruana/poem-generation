@@ -33,8 +33,8 @@ CORS(app)
 # md= model.download("1.2.0")
 
 ## Initialisation du modèle
-t5_model = T5ForConditionalGeneration.from_pretrained("C:/Users/emeli/Documents/poem-generation/application/back/models/t5-finetuned-1.2.0/")
-t5_tokenizer = T5Tokenizer.from_pretrained("C:/Users/emeli/Documents/poem-generation/application/back/models/t5-finetuned-1.2.0/")
+t5_model = T5ForConditionalGeneration.from_pretrained("/home/t5-finetuned-1.2.0/")
+t5_tokenizer = T5Tokenizer.from_pretrained("/home/t5-finetuned-1.2.0/")
 
 ## Initialisation Google Gen AI
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE"
