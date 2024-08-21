@@ -13,10 +13,6 @@ from langchain_google_genai import GoogleGenerativeAI
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.output_parsers import StrOutputParser
 
-## Imports pour récupérer le modèle fine-tuned
-import comet_ml
-from comet_ml import API, Experiment
-
 ## Imports pour le RAG
 import pinecone
 from pinecone import Pinecone
@@ -28,13 +24,9 @@ app = Flask(__name__, static_folder='../front/', template_folder='../front/')
 CORS(app)
 
 ## Téléchargement de mon modèle fine-tuned et son tokeniser
-# api=API()
-# model = api.get_model("emeline-caruana", "t5-finetuned")
-# md= model.download("1.2.0")
-
 ## Initialisation du modèle
-t5_model = T5ForConditionalGeneration.from_pretrained("/home/t5-finetuned-1.2.0/")
-t5_tokenizer = T5Tokenizer.from_pretrained("/home/t5-finetuned-1.2.0/")
+t5_model = T5ForConditionalGeneration.from_pretrained("emeline-caruana/t5-poem-gen")
+t5_tokenizer = T5Tokenizer.from_pretrained("emeline-caruana/t5-poem-gen")
 
 ## Initialisation Google Gen AI
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE"
