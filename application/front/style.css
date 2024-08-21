@@ -11,10 +11,9 @@ body {
 
 .container {
     background-color: #fff;
-    padding: 50px;
+    padding: 100px;
     border-radius: 5px;
-    width: 400px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+    width: 800px;
 }
 
 h2 {

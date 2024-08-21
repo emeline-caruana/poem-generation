@@ -1,3 +1,5 @@
+import os
+
 ## Imports pour Flask
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
@@ -13,8 +15,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 ## Imports pour récupérer le modèle fine-tuned
 import comet_ml
-from comet_ml import API
-from comet_ml import Experiment
+from comet_ml import API, Experiment
 
 ## Imports pour le RAG
 import pinecone
@@ -32,10 +33,11 @@ CORS(app)
 # md= model.download("1.2.0")
 
 ## Initialisation du modèle
-t5_model = T5ForConditionalGeneration.from_pretrained("C:/Users/emeli/Documents/poem-generation/finetuning/models/t5-finetuned-1.2.0/")
-t5_tokenizer = T5Tokenizer.from_pretrained("C:/Users/emeli/Documents/poem-generation/finetuning/models/t5-finetuned-1.2.0/")
+t5_model = T5ForConditionalGeneration.from_pretrained("C:/Users/emeli/Documents/poem-generation/application/back/models/t5-finetuned-1.2.0/")
+t5_tokenizer = T5Tokenizer.from_pretrained("C:/Users/emeli/Documents/poem-generation/application/back/models/t5-finetuned-1.2.0/")
 
 ## Initialisation Google Gen AI
+os.environ["GOOGLE_API_KEY"] = "AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE"
 google_llm = GoogleGenerativeAI(model="gemini-pro", google_api_key="AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE")
 
 ## Mémoire
