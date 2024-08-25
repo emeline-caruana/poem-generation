@@ -5,6 +5,7 @@ document.getElementById('apiForm').addEventListener('submit', function(event) {
 
     // Use the backend service name defined in docker-compose.yaml
     const backendUrl = 'http://backend:5050';
+    // const backendUrl = 'http://http://127.0.0.1:5050/' 
 
     fetch(`${backendUrl}/predict`, {
         method: 'POST',
