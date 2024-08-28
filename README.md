@@ -9,9 +9,6 @@ Génération de poèmes
 Ce projet est un projet de fin de formation LLM Ops avec Datascientest. 
 Il porte sur la génération de poèmes à partir d'un thème en anglais. 
 
-## Rapport de projet
-Le rapport de projet est disponible en format PDF à la racine du projet GitLab
-
 ## Architecture du repo
 Le repo a deux dossiers principaux : application et finetuning.
 
