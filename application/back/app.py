@@ -26,13 +26,12 @@ CORS(app)
 
 ## Téléchargement de mon modèle fine-tuned et son tokeniser
 ## Initialisation du modèle
-# os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
 t5_model = T5ForConditionalGeneration.from_pretrained("emeline-caruana/t5-poem-gen")
 t5_tokenizer = T5Tokenizer.from_pretrained("emeline-caruana/t5-poem-gen")
 
 ## Initialisation Google Gen AI
-# os.environ["GOOGLE_API_KEY"] = "AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE"
 google_llm = GoogleGenerativeAI(model="gemini-pro", google_api_key="AIzaSyDI4gpwnwFsta6WkVsnRrcJxzZzgHHSunE")
 
 ## Mémoire
@@ -101,8 +100,6 @@ def predict():
 
     # chain = prompt_template | google_llm | StrOutputParser()
     chain = LLMChain(llm=google_llm, prompt=prompt_template)
-    final_poem = chain.predict(topic= topic, poem= t5_poem, context= context)
-
     try:
         final_poem = chain.predict(topic= topic, poem= t5_poem, context= context)
         if not final_poem:
@@ -148,8 +145,6 @@ def get_poem():
 
 
 @app.route('/', methods=['GET'])
-# def index():
-#     return "Hello, World!"
 def index():
     return render_template('index.html')
 
