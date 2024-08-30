@@ -12,5 +12,3 @@ langchain-huggingface
 langchain-google-genai
 
 pinecone
-
-comet-ml
