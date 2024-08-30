@@ -6,7 +6,7 @@ document.getElementById('apiForm').addEventListener('submit', function(event) {
     // Utilisation du path défini dans  docker-compose.yaml
     const backendUrl = 'http://backend:5050';
     // Si l'app est lancée en local et pas avec docker
-    // const backendUrl = 'http://http://127.0.0.1:5050/'
+    // const backendUrl = 'http://localhost:5050/'
 
     fetch(`${backendUrl}/predict`, {
         method: 'POST',
